@@ -1,0 +1,3 @@
+class LoadMoreListener {
+  void onLoadMore() {}
+}
