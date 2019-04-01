@@ -16,18 +16,19 @@ class ImgurImages {
 }
 
 class ImgurImage {
-  final String id;
-  final String title;
+  static int TYPE_PROGRESS = 1;
+  static int TYPE_ITEM = 2;
+  static int TYPE_ERROR = 3;
   final String link;
+  final int itemType;
 
-  ImgurImage({this.id, this.title, this.link});
+  ImgurImage({this.link, this.itemType});
 
   factory ImgurImage.fromJson(Map<String, dynamic> json) {
     if (json['type'] != null && json['type'] == "image/jpeg") {
       return ImgurImage(
-        id: json['id'],
-        title: json['title'],
         link: json['link'],
+        itemType: ImgurImage.TYPE_ITEM,
       );
     } else {
       return null;
@@ -39,7 +40,7 @@ Future<ImgurImages> fetchImages(int page) async {
   final response = await http.get(
     'https://api.imgur.com/3/gallery/search/top/' +
         page.toString() +
-        '1?q_type=jpg&q_size_px=med&q=cats',
+        '1?q_type=jpg&q_size_px=med&q=random',
     // Send authorization headers to the backend
     headers: {HttpHeaders.authorizationHeader: "Client-ID <>"},
   );
