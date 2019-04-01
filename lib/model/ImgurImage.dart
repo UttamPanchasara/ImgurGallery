@@ -42,7 +42,7 @@ Future<ImgurImages> fetchImages(int page) async {
         page.toString() +
         '1?q_type=jpg&q_size_px=med&q=random',
     // Send authorization headers to the backend
-    headers: {HttpHeaders.authorizationHeader: "Client-ID <>"},
+    headers: {HttpHeaders.authorizationHeader: "Client-ID <Your Imgur Client-ID>"},
   );
 
   if (response.statusCode == 200) {
