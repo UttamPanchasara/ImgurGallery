@@ -1,8 +1,6 @@
-# imgur_gallery
+# Imgur Gallery
 
-A new Flutter application, To Demostrate the Lazy loading funcationality.
-Application is fetchinig images from Imgur and showing in Grid listview.
-
+Application to fetch Random Images using Imgur's search API, and display listing of Images in Gridview with lazy loading kind of functionality.
 
 
 | Gallery | Progress at Bottom |
