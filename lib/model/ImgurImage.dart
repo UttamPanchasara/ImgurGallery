@@ -38,7 +38,7 @@ Future<ImgurImages> fetchImages(int page) async {
     'https://api.imgur.com/3/gallery/search/top/' +
         page.toString() +
         '1?q_type=jpg&q_size_px=med&q=random',
-    headers: {HttpHeaders.authorizationHeader: "Client-ID 3a2b7b4d6c5fb02"},
+    headers: {HttpHeaders.authorizationHeader: "Client-ID <>"},
   );
   if (response.statusCode == 200) {
     return ImgurImages.fromJson(json.decode(response.body));
