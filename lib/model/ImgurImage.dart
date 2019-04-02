@@ -9,10 +9,8 @@ class ImgurImages {
   ImgurImages({this.images});
 
   factory ImgurImages.fromJson(Map<String, dynamic> json) => new ImgurImages(
-      images: json["data"] != null
-          ? new List<ImgurImage>.from(
-              json["data"].map((x) => ImgurImage.fromJson(x)))
-          : null);
+      images: new List<ImgurImage>.from(
+          json["data"].map((x) => ImgurImage.fromJson(x))));
 }
 
 class ImgurImage {
@@ -30,9 +28,8 @@ class ImgurImage {
         link: json['link'],
         itemType: ImgurImage.TYPE_ITEM,
       );
-    } else {
-      return null;
     }
+    return null;
   }
 }
 
@@ -41,15 +38,11 @@ Future<ImgurImages> fetchImages(int page) async {
     'https://api.imgur.com/3/gallery/search/top/' +
         page.toString() +
         '1?q_type=jpg&q_size_px=med&q=random',
-    // Send authorization headers to the backend
-    headers: {HttpHeaders.authorizationHeader: "Client-ID <Your Imgur Client-ID>"},
+    headers: {HttpHeaders.authorizationHeader: "Client-ID 3a2b7b4d6c5fb02"},
   );
-
   if (response.statusCode == 200) {
-    // If server returns an OK response, parse the JSON
     return ImgurImages.fromJson(json.decode(response.body));
   } else {
-    // If that response was not OK, throw an error.
     throw Exception('Failed to fetch Images');
   }
 }

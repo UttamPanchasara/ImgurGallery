@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.black,
       ),
-      home: MyHomePage(title: 'Imgur Gallery'),
+      home: MyHomePage(title: 'Random Pics'),
     );
   }
 }
@@ -24,7 +24,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var mPageCount = 1; // initial page count will be 1
+  var mPageCount = 0; // initial page count will be 0
   bool isLoading = false;
   int itemType = ImgurImage.TYPE_PROGRESS;
   List<ImgurImage> imageList = [];
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (imageList.length == 0 ||
         (imageList.length == 1 &&
             imageList[0].itemType == ImgurImage.TYPE_PROGRESS)) {
-      return _progressWidget();
+      return Center(child: CircularProgressIndicator());
     } else if (imageList.length == 1 &&
         imageList[0].itemType == ImgurImage.TYPE_ERROR) {
       return Center(
@@ -84,12 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   var image = imageList[index];
                   if (image.itemType == ImgurImage.TYPE_ITEM) {
                     return Center(
-                      child: FadeInImage.assetNetwork(
-                        fit: BoxFit.cover,
-                        placeholder: 'assets/imgur_placeholder.jpg',
-                        image: image.link,
-                      ),
-                    );
+                        child: FadeInImage.assetNetwork(
+                            placeholder: 'assets/imgur_placeholder.jpg',
+                            image: image.link));
                   } else {
                     return Container();
                   }
@@ -103,17 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Widget _progressWidget() {
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
   Widget _showIndicator() {
     if (itemType == ImgurImage.TYPE_PROGRESS) {
       return Container(
         margin: EdgeInsets.all(20),
-        child: _progressWidget(),
+        child: Center(child: CircularProgressIndicator()),
       );
     } else {
       return Container();
@@ -124,30 +115,25 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!isLoading) {
       mPageCount++;
       isLoading = true;
+
+      if (imageList.length == 1) imageList.removeLast();
       imageList.add(ImgurImage(link: "", itemType: ImgurImage.TYPE_PROGRESS));
       setState(() {});
 
       await fetchImages(mPageCount).then((imgurImages) {
         imageList.removeLast();
-
-        var images = imgurImages.images;
-        for (int i = 0; i < images.length; i++) {
-          if (images[i] != null) {
-            imageList.add(images[i]);
+        for (var value in imgurImages.images) {
+          if (value != null) {
+            imageList.add(value);
           }
         }
       }).catchError((error) {
-        if (imageList.length == 1) {
-          imageList.removeLast();
+        imageList.removeLast();
+        if (imageList.length == 0)
           imageList.add(ImgurImage(link: "", itemType: ImgurImage.TYPE_ERROR));
-        } else {
-          imageList.removeLast();
-        }
-
         if (mPageCount > 0) {
           mPageCount--;
         }
-        print(error);
       }).whenComplete(() {
         isLoading = false;
         setState(() {});
